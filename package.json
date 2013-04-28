@@ -16,5 +16,8 @@
     "buddy"
   ],
   "author": "Quildreen \"Sorella\" Motta",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "test-buddy": "~0.1.0"
+  }
 }
