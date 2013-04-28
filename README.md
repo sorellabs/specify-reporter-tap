@@ -7,7 +7,7 @@ TAP reporter for Buddy.
 You pass the `buddy-tap` library as your reporter:
 
 ```js
-var spec   = require('buddy')()
+var spec   = require('test-buddy')()
 var assert = require('assert')
 
 spec('Your thing', function(it) {
