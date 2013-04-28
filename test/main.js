@@ -41,4 +41,6 @@ spec.run(reporter(function(s) {
   console.log('1..3')
   console.log('# pass', tests.pass)
   console.log('# fail', tests.fail)
+
+  if (tests.fail)  process.exit(1)
 })
