@@ -88,7 +88,7 @@ module.exports = function tapReporter(logger) { return function(report) {
   log('TAP version 13')
 
   report.on('success', function(ev, result) {
-    log('ok', ++i, fullTitle(result))
+    log('ok', ++i, fullTitle(result.test))
   })
 
   report.on('failure', function(ev, result) {
