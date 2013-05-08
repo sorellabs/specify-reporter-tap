@@ -1,13 +1,13 @@
-# buddy-tap [![Build Status](https://travis-ci.org/buddyjs/buddy-tap.png)](https://travis-ci.org/buddyjs/buddy-tap) ![Dependencies Status](https://david-dm.org/buddyjs/buddy-tap.png)
+# brofist-tap [![Build Status](https://travis-ci.org/brofistjs/brofist-tap.png)](https://travis-ci.org/brofistjs/brofist-tap) ![Dependencies Status](https://david-dm.org/brofistjs/brofist-tap.png)
   
-TAP reporter for Buddy.
+TAP reporter for Brofist.
 
 ## Example
 
-You pass the `buddy-tap` library as your reporter:
+You pass the `brofist-tap` library as your reporter:
 
 ```js
-var spec   = require('test-buddy')()
+var spec   = require('brofist')()
 var assert = require('assert')
 
 spec('Your thing', function(it) {
@@ -16,7 +16,7 @@ spec('Your thing', function(it) {
   })
 })
 
-spec.run(require('buddy-tap')())
+spec.run(require('brofist-tap')())
 ```
 
 And get back TAP output!
@@ -36,7 +36,7 @@ ok 1 Your thing Should do X
 
 Just grab it from NPM:
 
-    $ npm install buddy-tap
+    $ npm install brofist-tap
     
 ## Licence
 

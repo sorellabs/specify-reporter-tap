@@ -1,4 +1,4 @@
-var spec     = require('test-buddy')()
+var spec     = require('brofist')()
 var reporter = require('../')
 
 spec('tapReporter()', function(it) {

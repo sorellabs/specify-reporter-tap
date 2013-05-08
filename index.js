@@ -1,6 +1,6 @@
-/// Module buddy-tap
+/// Module brofist-tap
 //
-// TAP reporter for Buddy.
+// TAP reporter for Brofist.
 //
 //
 // Copyright (c) 2013 Quildreen Motta
@@ -70,7 +70,7 @@ function describeFailure(ex) {
 
 ///// λ tapReporter
 //
-// A reporter for TAP output of Buddy tests.
+// A reporter for TAP output of Brofist tests.
 //
 // You can specify an alternative logging function, by default we just
 // go happily with `console.log`.
