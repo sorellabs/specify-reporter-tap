@@ -19,6 +19,6 @@
   "author": "Quildreen \"Sorella\" Motta",
   "license": "MIT",
   "devDependencies": {
-    "brofist": "~0.2.x"
+    "brofist": "~0.3.x"
   }
 }

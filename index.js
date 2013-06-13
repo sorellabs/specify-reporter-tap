@@ -87,20 +87,20 @@ module.exports = function tapReporter(logger) { return function(report) {
 
   log('TAP version 13')
 
-  report.on('success', function(ev, result) {
+  report.signals.success.add(function(result) {
     log('ok', ++i, fullTitle(result.test))
   })
 
-  report.on('failure', function(ev, result) {
+  report.signals.failure.add(function(result) {
     log('not ok', ++i, fullTitle(result.test))
     log(describeFailure(result.exception))
   })
 
-  report.on('ignored', function(ev, result) {
+  report.signals.ignored.add(function(result) {
     log('# ignored:', fullTitle(result.test))
   })
 
-  report.on('done', function(ev, results) {
+  report.signals.done.add(function(results) {
     log('')
     log('1..' + i)
     log('# tests', i)
