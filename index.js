@@ -1,4 +1,4 @@
-/// Module brofist-tap
+// # Module brofist-tap
 //
 // TAP reporter for Brofist.
 //
@@ -24,37 +24,39 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-//// -- Dependencies ---------------------------------------------------
+// -- Dependencies -----------------------------------------------------
 var compose = require('athena').compose
 
-//// -- Helpers --------------------------------------------------------
 
-///// λ fullTitle
+
+// -- Helpers ----------------------------------------------------------
+
+// ### fullTitle(test)
 //
 // Retrieves the fully qualified title of a test.
 //
 // :: Test -> String
 function fullTitle(test) {
   var title = test.title || ''
-  if (test.parent) title = [fullTitle(test.parent), title]
-                             .filter(Boolean)
-                             .join(' ')
-  return title
-}
+  if (test.parent) title = [fullTitle(test.parent), title].filter(Boolean)
+                                                          .join(' ')
+  return title }
 
-///// λ pad
+
+// ### pad(n, s)
 //
 // Pads a string with some whitespace.
 //
 // :: Number, String -> String
 function pad(n, s) {
   var before = Array(n + 1).join(' ')
+
   return s.split(/\r\n|\r|\n/)
           .map(function(a){ return before + a })
-          .join('\n')
-}
+          .join('\n') }
 
-///// λ describeFailure
+
+// ### describeFailure(ex)
 //
 // Returns a YAML serialisation of an exception.
 //
@@ -68,19 +70,24 @@ function describeFailure(ex) {
          ,       pad(6, ex.stack)
          ,'  ...'
          ,'  '
-         ].join('\n')
-}
+         ].join('\n') }
 
+
+// ### describeLog(log)
+//
+// Returns a YAML serialisation of a LogEntry.
+//
+// :: LogEntry -> String
 function describeLog(log) {
   return ['  ---'
          ,'    message: >'
          ,       pad(6, log.data.join(' '))
          ,'  ...'
          ,'  '
-         ].join('\n')
-}
+         ].join('\n') }
 
-///// λ tapReporter
+
+// ### tapReporter(logger)(report)
 //
 // A reporter for TAP output of Brofist tests.
 //
@@ -93,29 +100,28 @@ module.exports = function tapReporter(logger) { return function(report) {
 
   if (!logger)  logger = console.log.bind(console)
   function log() {
-    logger([].join.call(arguments, ' '))
-  }
+    logger([].join.call(arguments, ' ')) }
 
 
   log('TAP version 13')
 
   report.signals.success.add(function(result) {
-    log('ok', ++i, fullTitle(result.test))
-  })
+    log('ok', ++i, fullTitle(result.test)) })
+
 
   report.signals.failure.add(function(result) {
     log('not ok', ++i, fullTitle(result.test))
-    log(describeFailure(result.exception))
-  })
+    log(describeFailure(result.exception)) })
+
 
   report.signals.ignored.add(function(result) {
-    log('# ignored:', fullTitle(result.test))
-  })
+    log('# ignored:', fullTitle(result.test)) })
+
 
   report.signals.result.add(function(result) {
     if (result.logs.length)
-      result.logs.forEach(compose(log, describeLog))
-  })
+      result.logs.forEach(compose(log, describeLog)) })
+
 
   report.signals.done.add(function(results) {
     log('')
@@ -123,6 +129,5 @@ module.exports = function tapReporter(logger) { return function(report) {
     log('# tests', i)
     log('# pass', results.passed.length)
     log('# fail', results.failed.length)
-    log('# ignored', results.ignored.length)
-  })
+    log('# ignored', results.ignored.length) })
 }}
