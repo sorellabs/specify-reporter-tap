@@ -1,6 +1,11 @@
-# brofist-tap [![Build Status](https://travis-ci.org/brofistjs/brofist-tap.png)](https://travis-ci.org/brofistjs/brofist-tap) ![Dependencies Status](https://david-dm.org/brofistjs/brofist-tap.png)
+Brofist: TAP reporter
+=====================
+
+[![Build Status](https://travis-ci.org/brofistjs/brofist-tap.png)](https://travis-ci.org/brofistjs/brofist-tap)
+[![Dependencies Status](https://david-dm.org/brofistjs/brofist-tap.png)](https://david-dm.org/brofistjs/brofist-tap)
   
 TAP reporter for Brofist.
+
 
 ## Example
 
@@ -32,11 +37,13 @@ ok 1 Your thing Should do X
 # ignored 0
 ```
 
+
 ## Installing
 
 Just grab it from NPM:
 
     $ npm install brofist-tap
+    
     
 ## Licence
 
