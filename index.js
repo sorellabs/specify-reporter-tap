@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+//// -- Dependencies ---------------------------------------------------
+var compose = require('athena').compose
+
 //// -- Helpers --------------------------------------------------------
 
 ///// λ fullTitle
@@ -68,6 +71,15 @@ function describeFailure(ex) {
          ].join('\n')
 }
 
+function describeLog(log) {
+  return ['  ---'
+         ,'    message: >'
+         ,       pad(6, log.data.join(' '))
+         ,'  ...'
+         ,'  '
+         ].join('\n')
+}
+
 ///// λ tapReporter
 //
 // A reporter for TAP output of Brofist tests.
@@ -98,6 +110,11 @@ module.exports = function tapReporter(logger) { return function(report) {
 
   report.signals.ignored.add(function(result) {
     log('# ignored:', fullTitle(result.test))
+  })
+
+  report.signals.result.add(function(result) {
+    if (result.logs.length)
+      result.logs.forEach(compose(log, describeLog))
   })
 
   report.signals.done.add(function(results) {
