@@ -1,18 +1,22 @@
-Brofist: TAP reporter
+Hi-Five: TAP reporter
 =====================
 
-[![Build Status](https://travis-ci.org/brofistjs/brofist-tap.png)](https://travis-ci.org/brofistjs/brofist-tap)
-[![Dependencies Status](https://david-dm.org/brofistjs/brofist-tap.png)](https://david-dm.org/brofistjs/brofist-tap)
-  
-TAP reporter for Brofist.
+[![Build Status](https://travis-ci.org/hifivejs/hifive-tap.png)](https://travis-ci.org/hifivejs/hifive-tap)
+[![Dependencies Status](https://david-dm.org/hifivejs/hifive-tap.png)](https://david-dm.org/hifivejs/hifive-tap.png)
+[![NPM version](https://badge.fury.io/js/hifive-tap.png)](http://badge.fury.io/js/hifive-tap)
+[![unstable](http://hughsk.github.io/stability-badges/dist/unstable.svg)](http://github.com/hughsk/stability-badges)
+
+[![browser support](http://ci.testling.com/hifivejs/hifive-tap.png)](http://ci.testling.com/hifivejs/hifive-tap)
+
+TAP reporter for [Hi-Five](https://github.com/hifivejs/hifive).
 
 
 ## Example
 
-You pass the `brofist-tap` library as your reporter:
+You pass the `hifive-tap` library as your reporter:
 
 ```js
-var spec   = require('brofist')()
+var spec   = require('hifive')()
 var assert = require('assert')
 
 spec('Your thing', function(it) {
@@ -21,7 +25,7 @@ spec('Your thing', function(it) {
   })
 })
 
-spec.run(require('brofist-tap')())
+spec.run(require('hifive-tap')())
 ```
 
 And get back TAP output!
@@ -42,9 +46,12 @@ ok 1 Your thing Should do X
 
 Just grab it from NPM:
 
-    $ npm install brofist-tap
+    $ npm install hifive-tap
     
     
 ## Licence
 
-MIT/X11. IOW you just do whatever the fuck you want to ;3
+Copyright (c) 2013 Quildreen Motta.
+
+Released under the [MIT licence](https://github.com/hifivejs/hifive-tap/blob/master/LICENCE).
+

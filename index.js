@@ -1,6 +1,6 @@
-// # Module brofist-tap
+// # Module hifive-tap
 //
-// TAP reporter for Brofist.
+// TAP reporter for Hi-Five.
 //
 //
 // Copyright (c) 2013 Quildreen Motta

@@ -1,4 +1,4 @@
-var spec     = require('brofist')()
+var spec     = require('hifive')()
 var reporter = require('../')
 
 spec('tapReporter()', function(it) {

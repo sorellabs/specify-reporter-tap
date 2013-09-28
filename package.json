@@ -1,25 +1,25 @@
 {
-  "name": "brofist-tap",
-  "version": "0.2.0",
-  "description": "TAP reporter for Brofist.",
+  "name": "hifive-tap",
+  "version": "0.1.0",
+  "description": "TAP reporter for Hi-Five.",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/main"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brofistjs/brofist-tap.git"
+    "url": "git://github.com/hifivejs/hifive-tap.git"
   },
   "keywords": [
     "testing",
     "tap",
-    "brofist",
-    "brofist-reporter"
+    "hifive",
+    "hifive-reporter"
   ],
   "author": "Quildreen \"Sorella\" Motta",
   "license": "MIT",
   "devDependencies": {
-    "brofist": "~0.3.x"
+    "hifive": "~0.1.x"
   },
   "dependencies": {
     "athena": "~0.2.0"
