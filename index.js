@@ -69,7 +69,6 @@ function describeFailure(ex) {
          ,'    stack: | '
          ,       pad(6, ex.stack)
          ,'  ...'
-         ,'  '
          ].join('\n') }
 
 
@@ -83,7 +82,6 @@ function describeLog(log) {
          ,'    message: >'
          ,       pad(6, log.data.join(' '))
          ,'  ...'
-         ,'  '
          ].join('\n') }
 
 
