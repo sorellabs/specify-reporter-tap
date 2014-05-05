@@ -111,10 +111,18 @@ module.exports = function tapReporter(logger) { return function(report) {
     log('not ok', ++i, fullTitle(result.test))
     log(describeFailure(result.exception)) })
 
-
   report.signals.ignored.add(function(result) {
     log('# ignored:', fullTitle(result.test)) })
 
+
+  report.signals.suite.started.add(function(suite) {
+    log('# ' + suite.fullTitle().join(' '))
+  })
+
+  report.signals.suite.finished.add(function(_, suite) {
+    if (suite.parent && suite.parent.title)
+      log('# ' + suite.parent.fullTitle().join(' '))
+  })
 
   report.signals.result.add(function(result) {
     if (result.logs.length)
@@ -124,8 +132,9 @@ module.exports = function tapReporter(logger) { return function(report) {
   report.signals.done.add(function(results) {
     log('')
     log('1..' + i)
-    log('# tests', i)
-    log('# pass', results.passed.length)
-    log('# fail', results.failed.length)
-    log('# ignored', results.ignored.length) })
+    log('# tests  ', i)
+    log('# ignored', results.ignored.length)
+    log('# pass   ', results.passed.length)
+    log('# fail   ', results.failed.length) })
+
 }}

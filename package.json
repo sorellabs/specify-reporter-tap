@@ -1,6 +1,6 @@
 {
   "name": "hifive-tap",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TAP reporter for Hi-Five.",
   "main": "index.js",
   "scripts": {
