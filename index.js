@@ -1,8 +1,3 @@
-// # Module hifive-tap
-//
-// TAP reporter for Hi-Five.
-//
-//
 // Copyright (c) 2013—2014 Quildreen Motta
 //
 // Permission is hereby granted, free of charge, to any person
@@ -25,29 +20,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // -- Dependencies -----------------------------------------------------
-var compose = require('athena').compose
+var Maybe    = require('data.maybe')
+var compose  = require('core.lambda').compose
+var constant = require('core.lambda').constant
+var curry    = require('core.lambda').curry
+
+var Just    = Maybe.Just
+var Nothing = Maybe.Nothing
 
 
 
 // -- Helpers ----------------------------------------------------------
 
-// ### fullTitle(test)
-//
-// Retrieves the fully qualified title of a test.
-//
-// :: Test -> String
-function fullTitle(test) {
-  var title = test.title || ''
-  if (test.parent) title = [fullTitle(test.parent), title].filter(Boolean)
-                                                          .join(' ')
-  return title }
-
-
-// ### pad(n, s)
-//
-// Pads a string with some whitespace.
-//
-// :: Number, String -> String
+/**
+ * Pads a string with some whitespace.
+ *
+ * @summary Number, String → String
+ */
 function pad(n, s) {
   var before = Array(n + 1).join(' ')
 
@@ -56,45 +45,93 @@ function pad(n, s) {
           .join('\n') }
 
 
-// ### describeFailure(ex)
-//
-// Returns a YAML serialisation of an exception.
-//
-// :: Error -> String
+/**
+ * Returns a YAML serialisation of an exception.
+ *
+ * @summary Error → String
+ */
 function describeFailure(ex) {
+  return ex.stack?        ['  ---'
+                          ,'    type: ' + ex.name
+                          ,'    message: >'
+                          ,       pad(6, ex.message)
+                          ,'    stack: | '
+                          ,       pad(6, ex.stack)
+                          ,'  ...'
+                          ].join('\n')
+  :      /* otherwise */  ['  ---'
+                          ,'    message: >'
+                          ,       pad(6, ex.toString())
+                          ,'  ...'
+                          ].join('\n')
+}
+
+
+/**
+ * Returns a YAML representation of a LogEntry.
+ *
+ * @summary LogEntry → String
+ */
+function describeLog(entry) {
   return ['  ---'
-         ,'    type: ' + ex.name
          ,'    message: >'
-         ,       pad(6, ex.message)
-         ,'    stack: | '
-         ,       pad(6, ex.stack)
+         ,       pad(6, entry.log.join(' '))
          ,'  ...'
          ].join('\n') }
 
 
-// ### describeLog(log)
-//
-// Returns a YAML serialisation of a LogEntry.
-//
-// :: LogEntry -> String
-function describeLog(log) {
-  return ['  ---'
-         ,'    message: >'
-         ,       pad(6, log.data.join(' '))
-         ,'  ...'
-         ].join('\n') }
+/**
+ * Checks if a signal should count as a test result in TAP.
+ *
+ * @summary Signal → Boolean
+ */
+function countSignal(signal) {
+  return signal.isTestResult && !signal.value.isIgnored
+}
 
 
-// ### tapReporter(logger)(report)
-//
-// A reporter for TAP output of Brofist tests.
-//
-// You can specify an alternative logging function, by default we just
-// go happily with `console.log`.
-//
-// :: (String... -> ()) -> Report -> ()
-module.exports = function tapReporter(logger) { return function(report) {
-  var i = 0
+/**
+ * Renders a single result for TAP.
+ *
+ * @method
+ * @summary Number → Result → String
+ */
+renderResult = curry(2, renderResult)
+function renderResult(index, result) {
+  return result.cata({
+    Success: function(){
+      return 'ok ' + index + ' ' + result.fullTitle()
+           + '\n' + result.log.map(describeLog).join('\n') }
+  , Failure: function(){
+      return 'not ok ' + index + ' ' + result.fullTitle()
+           + '\n' + describeFailure(result.exception)
+           + '\n' + result.log.map(describeLog).join('\n') }
+  , Ignored: function(){
+      return '# ignored: ' + result.fullTitle() + '\n' }
+  })
+}
+
+
+/**
+ * Re-throws an error.
+ *
+ * @summary Error → Void
+ */
+function raise(error){ setTimeout(function(){ throw error }) }
+
+
+/**
+ * A reporter for TAP output of Hi-Five tests.
+ *
+ * You can specify an alternative logging functionk, by default we just go
+ * happily with `console.log`.
+ *
+ * @summary
+ * (String... → Void)
+ * → Rx.Observable[Error, Signal], Future[Error, Report]
+ * → Void
+ */
+module.exports = function tapReporter(logger) { return function(stream, report) {
 
   if (!logger)  logger = console.log.bind(console)
   function log() {
@@ -103,38 +140,31 @@ module.exports = function tapReporter(logger) { return function(report) {
 
   log('TAP version 13')
 
-  report.signals.success.add(function(result) {
-    log('ok', ++i, fullTitle(result.test)) })
+  var enumeration = stream.scan(0, function(acc, x){
+                      return countSignal(x)? acc + 1
+                      :      /* otherwise */ acc
+                    })
+
+  var toRender = enumeration
+                   .zip(stream, function(a, b){ return { index: a, value: b }})
+                   .map(function(a) {
+                     return a.value.cata({
+                       Started    : Nothing
+                     , TestResult : compose(Just, renderResult(a.index))
+                     , Finished   : Nothing })})
 
 
-  report.signals.failure.add(function(result) {
-    log('not ok', ++i, fullTitle(result.test))
-    log(describeFailure(result.exception)) })
+  toRender.subscribe(function(x){ x.chain(log) }, raise)
+  report.subscribe(function(data) {
+    var tests   = data.passed.length + data.failed.length
+    var ignored = data.ignored.length
 
-  report.signals.ignored.add(function(result) {
-    log('# ignored:', fullTitle(result.test)) })
-
-
-  report.signals.suite.started.add(function(suite) {
-    log('# ' + suite.fullTitle().join(' '))
-  })
-
-  report.signals.suite.finished.add(function(_, suite) {
-    if (suite.parent && suite.parent.title)
-      log('# ' + suite.parent.fullTitle().join(' '))
-  })
-
-  report.signals.result.add(function(result) {
-    if (result.logs.length)
-      result.logs.forEach(compose(log, describeLog)) })
-
-
-  report.signals.done.add(function(results) {
     log('')
-    log('1..' + i)
-    log('# tests  ', i)
-    log('# ignored', results.ignored.length)
-    log('# pass   ', results.passed.length)
-    log('# fail   ', results.failed.length) })
+    log('1..' + tests)
+    log('# Tests ran: ' + tests + ' (' + renderIgnored(ignored) + data.time() + 'ms)')
+    log('# Passed:    ' + data.passed.length)
+    log('# Failed:    ' + data.failed.length)
+  }, raise)
 
+  function renderIgnored(x){ return x? x + ' ignored / ' : '' }
 }}

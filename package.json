@@ -1,6 +1,6 @@
 {
   "name": "hifive-tap",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "TAP reporter for Hi-Five.",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "hifive": "~0.1.x"
   },
   "dependencies": {
-    "athena": "~0.2.0"
+    "core.lambda": "^1.0.0",
+    "data.maybe": "^1.0.3"
   }
 }
