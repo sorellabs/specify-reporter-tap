@@ -1,8 +1,7 @@
 Hi-Five: TAP reporter
 =====================
 
-[![Build Status](https://travis-ci.org/hifivejs/hifive-tap.png)](https://travis-ci.org/hifivejs/hifive-tap)
-[![Dependencies Status](https://david-dm.org/hifivejs/hifive-tap.png)](https://david-dm.org/hifivejs/hifive-tap.png)
+[![Dependencies Status](https://david-dm.org/hifivejs/hifive-tap.png)](https://david-dm.org/hifivejs/hifive-tap)
 [![NPM version](https://badge.fury.io/js/hifive-tap.png)](http://badge.fury.io/js/hifive-tap)
 [![unstable](http://hughsk.github.io/stability-badges/dist/unstable.svg)](http://github.com/hughsk/stability-badges)
 
@@ -16,16 +15,18 @@ TAP reporter for [Hi-Five](https://github.com/hifivejs/hifive).
 You pass the `hifive-tap` library as your reporter:
 
 ```js
-var spec   = require('hifive')()
-var assert = require('assert')
+var hifive  = require('hifive')
+var alright = require('alright')
 
-spec('Your thing', function(it) {
-  it('Should do X', function() {
-    assert.strictEqual(f(x), g(x))
-  })
-})
+var tests = spec 'Your thing' {
+  it 'Should do X' {
+    f(x) => g(x)
+  }
+}
 
-spec.run(require('hifive-tap')())
+hifive.runWithDefaults([tests], require('hifive-tap')())
+      .fork(function(error) { throw error }
+           ,function(report){ if (report.all().length === 0) process.exit(1) })
 ```
 
 And get back TAP output!
@@ -35,10 +36,9 @@ TAP version 13
 ok 1 Your thing Should do X
 
 1..1
-# tests 1
-# pass 1
-# fail 0
-# ignored 0
+# Tests ran: 1 (1ms)
+# Passed:    1
+# Failed:    0
 ```
 
 
