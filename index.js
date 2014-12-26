@@ -100,7 +100,7 @@ function raise(error){ setTimeout(function(){ throw error }) }
 
 
 /**
- * A reporter for TAP output of Hi-Five tests.
+ * A reporter for TAP output of Specify tests.
  *
  * You can specify an alternative logging functionk, by default we just go
  * happily with `console.log`.
